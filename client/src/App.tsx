@@ -1,12 +1,15 @@
 import { useEffect } from 'react';
 import logo from './logo.svg';
 import './App.css';
+import { io } from 'socket.io-client'
+const socket = io()
 
 function App() {
   useEffect(() => {
-    fetch('/users')
-      .then(res => res.json())
-      .then(users => console.log(users));
+    socket.emit('chat', 55555);
+    socket.on('chat', (msg) => {
+      console.log(msg);
+    })
   }, [])
   return (
     <div className="App">
