@@ -1,39 +1,46 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import { io } from 'socket.io-client';
-import logo from './logo.svg';
 import './App.css';
 
 const socket = io();
 
-function App() {
+const App: React.FC = () => {
+  const [list, setList] = useState<string[]>([]);
+  const [msg, setMsg] = useState('');
+  const renderRef = useRef(true);
+
+  const handelMsg = (e: React.ChangeEvent<HTMLInputElement>) => setMsg(e.target.value);
+
+  const submit = () => {
+    socket.emit('chat', msg);
+    setMsg('');
+    console.log(list);
+  };
+
   useEffect(() => {
-    socket.emit('chat', 55555);
-    socket.on('chat', (msg) => {
-      console.log(msg);
+    if (renderRef.current && process.env.NODE_ENV === 'development') {
+      renderRef.current = false;
+      return;
+    }
+    socket.on('chat', (text) => {
+      setList((data) => [...data, text]);
     });
   }, []);
   return (
     <div className="App">
       <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit
-          {' '}
-          <code>src/App.tsx</code>
-          {' '}
-          and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
+        <ul>
+          {list.map((item) => (
+            <li key={item}>
+              {item}
+            </li>
+          ))}
+        </ul>
+        <input value={msg} type="text" onChange={handelMsg} />
+        <button type="button" onClick={submit}>送出</button>
       </header>
     </div>
   );
-}
+};
 
 export default App;
