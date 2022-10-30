@@ -1,6 +1,5 @@
 import React, { useEffect, useState, useRef } from 'react';
 import { io } from 'socket.io-client';
-import './App.css';
 
 const socket = io();
 
@@ -23,12 +22,14 @@ const App: React.FC = () => {
       return;
     }
     socket.on('chat', (text) => {
+      console.log(text);
+
       setList((data) => [...data, text]);
     });
   }, []);
   return (
-    <div className="App">
-      <header className="App-header">
+    <div className="w-screen h-screen flex justify-center items-center">
+      <div>
         <ul>
           {list.map((item) => (
             <li key={item}>
@@ -36,9 +37,9 @@ const App: React.FC = () => {
             </li>
           ))}
         </ul>
-        <input value={msg} type="text" onChange={handelMsg} />
+        <input className="border border-black" value={msg} type="text" onChange={handelMsg} />
         <button type="button" onClick={submit}>送出</button>
-      </header>
+      </div>
     </div>
   );
 };
