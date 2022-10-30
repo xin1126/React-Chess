@@ -4,14 +4,16 @@ const path = require('path');
 const app = express();
 app.use(express.static(path.join(__dirname, 'client/build')));
 
-app.get('/users', (req, res) => {
-  res.json([{
-    "id": 1,
-    "test1": '測試取得資料1'
-  }, {
-    "id": 2,
-    "test2": '測試取得資料2'
-  }]);
+const http = require('http');
+const server = http.createServer(app);
+const { Server } = require("socket.io");
+const io = new Server(server);
+
+io.on('connection', (socket) => {
+  socket.on('chat', (msg) => {
+    console.log(msg);
+    io.emit('chat', msg);
+  });
 });
 
 app.get('*', (req, res) => {
@@ -19,4 +21,4 @@ app.get('*', (req, res) => {
 });
 
 const port = process.env.PORT || 5000;
-app.listen(port);
+server.listen(port);
