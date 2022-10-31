@@ -10,9 +10,16 @@ const { Server } = require("socket.io");
 const io = new Server(server);
 
 io.on('connection', (socket: { on: (arg0: string, arg1: (msg: string) => void) => void; }) => {
-  socket.on('chat', (msg) => {
-    console.log(msg);
-    io.emit('chat', msg);
+  socket.on('playerName', (name) => {
+    io.emit('roomPlayer', name);
+  });
+
+  socket.on('roomPlayer', (room) => {
+    io.emit('playerName', room);
+  });
+
+  socket.on('playerMsg', (msg) => {
+    io.emit('playerMsg', msg);
   });
 });
 

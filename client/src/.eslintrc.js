@@ -41,6 +41,21 @@ module.exports = {
         tsx: 'never',
       },
     ],
+    'no-param-reassign': [
+      'error',
+      {
+        props: true,
+        ignorePropertyModificationsFor: [
+          'e',
+          'ctx',
+          'req',
+          'request',
+          'res',
+          'response',
+          'state',
+        ],
+      },
+    ],
   },
   settings: {
     'import/resolver': {
