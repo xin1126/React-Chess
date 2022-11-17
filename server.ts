@@ -16,8 +16,21 @@ io.on(
     socket.on('roomPlayer', (room) => {
       io.emit('playerName', room)
     })
+    socket.on('test', (name) => {
+      io.emit('test', name)
+    })
   }
 )
+
+const options = {
+  dotfiles: 'ignore',
+  etag: false,
+  extensions: ['htm', 'html', 'css', 'js', 'ico', 'jpg', 'jpeg', 'png', 'svg'],
+  index: ['index.html'],
+  maxAge: '1m',
+  redirect: false,
+}
+app.use(express.static('build', options))
 
 const port = process.env.PORT || 5000
 server.listen(port)

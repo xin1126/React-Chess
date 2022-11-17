@@ -19,10 +19,10 @@
     "module": "ESNext",
     "moduleResolution": "Node",
     "resolveJsonModule": true,
-    "isolatedModules": true,
+    "isolatedModules": false,
     "noEmit": true,
     "types": [
-      "vite/client"
+      "vite/client","node"
     ],
     "jsx": "react-jsx",
     "baseUrl": "./"
