@@ -1,8 +1,5 @@
 const express = require('express')
-const path = require('path')
-
 const app = express()
-app.use(express.static(path.join(__dirname, 'client/build')))
 
 const http = require('http')
 const server = http.createServer(app)
@@ -21,10 +18,6 @@ io.on(
     })
   }
 )
-
-app.get('*', (req: unknown, res: { sendFile: (arg0: unknown) => void }) => {
-  res.sendFile(path.join(__dirname + '/client/build/index.html'))
-})
 
 const port = process.env.PORT || 5000
 server.listen(port)
