@@ -5,6 +5,9 @@ import tsconfigPaths from 'vite-tsconfig-paths'
 import AutoImport from 'unplugin-auto-import/vite'
 
 export default defineConfig({
+  build: {
+    outDir: './build',
+  },
   plugins: [
     tsconfigPaths(),
     react(),

@@ -7,7 +7,7 @@
       "ESNext"
     ],
     "paths": {
-      "@/*": ["./src/*"]
+      "@/*": ["*"]
     },
     "allowJs": true,
     "checkJs": true,
