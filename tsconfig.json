@@ -7,7 +7,7 @@
       "ESNext"
     ],
     "paths": {
-      "@/*": ["*"]
+      "@/*": ["./src/*"]
     },
     "allowJs": true,
     "checkJs": true,
@@ -16,7 +16,7 @@
     "allowSyntheticDefaultImports": true,
     "strict": true,
     "forceConsistentCasingInFileNames": true,
-    "module": "ESNext",
+    "module": "commonjs",
     "moduleResolution": "Node",
     "resolveJsonModule": true,
     "isolatedModules": false,

@@ -1,26 +1,12 @@
-const express = require('express')
+import express from "express"
+import http from 'http'
+import { Server } from 'socket.io'
+import socket from './socket/index'
+
 const app = express()
-
-const http = require('http')
 const server = http.createServer(app)
-const { Server } = require('socket.io')
 const io = new Server(server)
-
-io.on(
-  'connection',
-  (socket: { on: (arg0: string, arg1: (msg: string) => void) => void }) => {
-    socket.on('playerName', (name) => {
-      io.emit('roomPlayer', name)
-    })
-
-    socket.on('roomPlayer', (room) => {
-      io.emit('playerName', room)
-    })
-    socket.on('test', (name) => {
-      io.emit('test', name)
-    })
-  }
-)
+socket(io)
 
 const options = {
   dotfiles: 'ignore',
