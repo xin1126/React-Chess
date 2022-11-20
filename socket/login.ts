@@ -7,7 +7,6 @@ const login = (io: any) => {
     })
 
     socket.on('disconnect', () => {
-      console.log('有人斷線')
       io.emit('leave', playerName)
     })
   })

@@ -2,13 +2,12 @@ import logo from '@/assets/logo.svg'
 import { io } from 'socket.io-client'
 import { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { setName, setList } from '@/store/user'
+import { setName, setList, handleLeavePlayer } from '@/store/user'
 
 const socket = io()
 
 const Home: React.FC = () => {
   const [playerName, setPlayerName] = useState('')
-  const [leavePlayer, setLeavePlayer] = useState('')
   const user = useSelector((state: User) => state)
   const dispatch = useDispatch()
   const navigate = useNavigate()
@@ -28,27 +27,12 @@ const Home: React.FC = () => {
   }
 
   useEffect(() => {
-    if (leavePlayer !== null) {
-      const remainPlayer = user.playerList.filter(
-        (item) => item !== leavePlayer
-      )
-      socket.emit('playerList', remainPlayer)
-      dispatch(setList(remainPlayer))
-    }
-  }, [leavePlayer])
-
-  useEffect(() => {
     socket.emit('playerList')
     socket.on('playerList', (data) => {
-      console.log(data)
       if (data?.length) dispatch(setList(data))
     })
 
-    socket.on('leave', (name) => {
-      console.log('有人斷線')
-      console.log(name)
-      setLeavePlayer(name)
-    })
+    socket.on('leave', (name) => dispatch(handleLeavePlayer(name)))
     return () => {
       socket.removeAllListeners('playerList')
     }
@@ -58,12 +42,7 @@ const Home: React.FC = () => {
       <p>首頁12111</p>
       <img className="w-2/4" src={logo} alt="logo" />
       <div>
-        <input
-          className="border border-black"
-          value={playerName}
-          type="text"
-          onChange={handelMsg}
-        />
+        <input className="border border-black" value={playerName} type="text" onChange={handelMsg} />
         <button type="button" onClick={submit}>
           送出
         </button>
