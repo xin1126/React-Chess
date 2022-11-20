@@ -1,6 +1,6 @@
 /// <reference types="vite/client" />
 
 interface User {
-  playerName: string,
+  playerName: string
   playerList: Array<string>
 }

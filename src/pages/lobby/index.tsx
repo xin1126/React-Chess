@@ -1,4 +1,3 @@
-import logo from '@/assets/logo.svg'
 import { io } from 'socket.io-client'
 import { useEffect } from 'react'
 import { setList } from '@/store/user'
@@ -10,7 +9,8 @@ const Lobby: React.FC = () => {
   const dispatch = useDispatch()
 
   useEffect(() => {
-    // if (!user.playerList.length) return
+    const sendTarget = user.playerList.at(-1) === user.playerName
+    if (sendTarget) socket.emit('playerList', user.playerList)
     socket.on('playerList', (data) => {
       if (data === null) socket.emit('playerList', user.playerList)
     })

@@ -2,7 +2,7 @@
 // import { reduceCount } from '@/store/count'
 
 const ReduceCount: React.FC = () => {
-  const dispatch = useDispatch()
+  // const dispatch = useDispatch()
 
   return (
     <div className="mb-2 text-center">

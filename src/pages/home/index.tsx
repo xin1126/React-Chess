@@ -1,16 +1,15 @@
 import logo from '@/assets/logo.svg'
 import { io } from 'socket.io-client'
 import { useEffect, useState } from 'react'
-import { useNavigate } from 'react-router-dom';
-import { setName } from '@/store/user'
+import { useNavigate } from 'react-router-dom'
+import { setName, setList } from '@/store/user'
 
 const socket = io()
 
 const Home: React.FC = () => {
   const [playerName, setPlayerName] = useState('')
-  const [playerList, setPlayerList] = useState('')
+  const user = useSelector((state: User) => state)
   const dispatch = useDispatch()
-
   const navigate = useNavigate()
 
   const handelMsg = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -19,7 +18,8 @@ const Home: React.FC = () => {
 
   const submit = () => {
     if (!playerName) return
-    if (playerList.includes(playerName)) return alert('名稱已使用')
+
+    if (user.playerList.includes(playerName)) return alert('名稱已使用')
     socket.emit('playerName', playerName)
     dispatch(setName(playerName))
     setPlayerName('')
@@ -29,8 +29,11 @@ const Home: React.FC = () => {
   useEffect(() => {
     socket.emit('playerList')
     socket.on('playerList', (data) => {
-      if (data?.length) setPlayerList(data)
+      if (data?.length) dispatch(setList(data))
     })
+    return () => {
+      socket.removeAllListeners('playerList')
+    }
   }, [])
   return (
     <div className="flex flex-col items-center text-5xl">

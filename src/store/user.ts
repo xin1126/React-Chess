@@ -2,7 +2,7 @@ import { createSlice } from '@reduxjs/toolkit'
 
 const initialState = {
   playerName: '',
-  playerList: []
+  playerList: [],
 }
 
 const user = createSlice({
@@ -13,7 +13,11 @@ const user = createSlice({
       state.playerName = action.payload
     },
     setList: (state: User, action) => {
-      state.playerList = [...state.playerList, action.payload]
+      if (typeof action.payload === 'string') {
+        state.playerList = [...state.playerList, action.payload]
+      } else {
+        state.playerList = [...action.payload]
+      }
     },
   },
 })
