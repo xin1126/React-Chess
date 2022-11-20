@@ -17,9 +17,7 @@ const Lobby: React.FC = () => {
   }, [user.playerList])
 
   useEffect(() => {
-    socket.on('playerName', (name) => {
-      dispatch(setList(name))
-    })
+    socket.on('playerName', (name) => dispatch(setList(name)))
   }, [])
 
   return (

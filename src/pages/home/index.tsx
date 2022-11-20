@@ -8,6 +8,7 @@ const socket = io()
 
 const Home: React.FC = () => {
   const [playerName, setPlayerName] = useState('')
+  const [leavePlayer, setLeavePlayer] = useState('')
   const user = useSelector((state: User) => state)
   const dispatch = useDispatch()
   const navigate = useNavigate()
@@ -27,9 +28,26 @@ const Home: React.FC = () => {
   }
 
   useEffect(() => {
+    if (leavePlayer !== null) {
+      const remainPlayer = user.playerList.filter(
+        (item) => item !== leavePlayer
+      )
+      socket.emit('playerList', remainPlayer)
+      dispatch(setList(remainPlayer))
+    }
+  }, [leavePlayer])
+
+  useEffect(() => {
     socket.emit('playerList')
     socket.on('playerList', (data) => {
+      console.log(data)
       if (data?.length) dispatch(setList(data))
+    })
+
+    socket.on('leave', (name) => {
+      console.log('有人斷線')
+      console.log(name)
+      setLeavePlayer(name)
     })
     return () => {
       socket.removeAllListeners('playerList')
