@@ -25,11 +25,24 @@ const Room: React.FC = () => {
   const handleMsg = (e: React.ChangeEvent<HTMLInputElement>) => {
     setMsg(e.target.value)
   }
+
   const submit = () => {
     if (!msg) return alert('請輸入訊息')
 
     socket.emit('roomMsg', msg, name)
   }
+
+  const handleLattice = (col: number, key: number) => {
+    const tempCheckerboard = [...checkerboard]
+    tempCheckerboard.forEach((checkerboardItem, checkerboardIndex) => {
+      checkerboardItem.list.forEach((listItem, listIndex) => {
+        tempCheckerboard[checkerboardIndex].list[listIndex].target = checkerboardIndex === col && listIndex === key
+      })
+    })
+    setCheckerboard(tempCheckerboard)
+  }
+
+  const pieceStyle = (color: string) => (color === 'red' ? 'border-[red] text-[red]' : 'border-black text-black')
 
   useEffect(() => {
     socket.emit('join', name)
@@ -58,15 +71,14 @@ const Room: React.FC = () => {
     }
     setCheckerboard(initCheckerboard)
   }, [])
-
-  const pieceStyle = (color: string) => (color === 'red' ? 'border-[red] text-[red]' : 'border-black text-black')
   return (
     <>
-      <ul className="flex border border-black">
+      <ul className="m-6 flex w-max border border-black">
         {checkerboard.map((item, itemIndex) => (
           <li key={item.col}>
             {checkerboard[itemIndex].list.map((list, listIndex) => (
               <div
+                onClick={() => handleLattice(item.col, listIndex)}
                 className="flex h-[100px] w-[100px] cursor-pointer items-center justify-center border border-black"
                 key={listIndex}
               >
@@ -77,6 +89,7 @@ const Room: React.FC = () => {
                   text-3xl font-bold
                   outline outline-2 outline-offset-4 outline-[#292929]
                   ${pieceStyle(list.lattice.color)}
+                  ${list.target && 'opacity-50'}
                 `}
                 >
                   {list.lattice.name}
