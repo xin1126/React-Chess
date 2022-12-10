@@ -1,8 +1,8 @@
 import React, { useEffect } from 'react'
 import { HashRouter, useRoutes, useLocation, useNavigate } from 'react-router-dom'
 import routes from './routes'
-import Footer from '@/components/Footer'
-import Heade from '@/components/Heade'
+// import Footer from '@/components/Footer'
+// import Heade from '@/components/Heade'
 
 const ToHome: React.FC = () => {
   const navigate = useNavigate()
@@ -28,10 +28,8 @@ const Element: React.FC = () => {
 const App: React.FC = () => {
   return (
     <HashRouter>
-      <div className="mx-auto flex h-screen max-w-[800px] flex-col justify-between pt-5">
-        <Heade />
+      <div className="mx-auto flex h-screen max-w-[800px] flex-col pt-5">
         <Element />
-        <Footer />
       </div>
     </HashRouter>
   )

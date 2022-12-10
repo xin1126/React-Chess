@@ -34,7 +34,11 @@ const Lobby: React.FC = () => {
 
   return (
     <>
-      <button onClick={toRoom}>建立房間</button>
+      <div className="text-center">
+        <button onClick={toRoom} className="rounded-xl border border-black px-4 py-2">
+          建立房間
+        </button>
+      </div>
       <div className="flex">
         <div className="mr-5">
           <h2>大廳玩家列表</h2>

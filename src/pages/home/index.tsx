@@ -1,4 +1,3 @@
-import logo from '@/assets/logo.svg'
 import { io } from 'socket.io-client'
 import { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
@@ -39,10 +38,15 @@ const Home: React.FC = () => {
   }, [])
   return (
     <div className="flex flex-col items-center text-5xl">
-      <p>首頁12111</p>
-      <img className="w-2/4" src={logo} alt="logo" />
+      <h1 className="mb-5">匿名暗棋對戰</h1>
       <div>
-        <input className="border border-black" value={playerName} type="text" onChange={handelMsg} />
+        <input
+          className="border border-black"
+          value={playerName}
+          type="text"
+          onChange={handelMsg}
+          placeholder="請輸入名稱"
+        />
         <button type="button" onClick={submit}>
           送出
         </button>

@@ -7,6 +7,10 @@ const room = (io: any) => {
     socket.on('roomMsg', (msg: string, roomName: string) => {
       io.to(roomName).emit('roomMsg', msg)
     })
+
+    socket.on('roomPlayer', (roomName: string, name: string) => {
+      io.to(roomName).emit('roomPlayer', name)
+    })
   })
 }
 
