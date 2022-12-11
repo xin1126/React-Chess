@@ -26,7 +26,12 @@ const Home: React.FC = () => {
   }
 
   useEffect(() => {
-    socket.emit('playerList')
+    if (!user.playerName) {
+      socket.emit('playerList')
+    } else {
+      dispatch(handleLeavePlayer(user.playerName))
+    }
+
     socket.on('playerList', (data) => {
       if (data?.length) dispatch(setList(data))
     })

@@ -1,5 +1,5 @@
 import { io } from 'socket.io-client'
-import { useEffect, useState } from 'react'
+import { useEffect, useState, useRef } from 'react'
 import { setList } from '@/store/user'
 import { useNavigate } from 'react-router-dom'
 
@@ -19,17 +19,36 @@ const Lobby: React.FC = () => {
     navigate(`/room/${name}`)
   }
 
+  const updateStatus = useRef(false)
   useEffect(() => {
+    if (updateStatus.current) {
+      updateStatus.current = false
+      return
+    }
+
     const sendTarget = user.playerList.at(-1) === user.playerName
     if (sendTarget) socket.emit('playerList', user.playerList)
     socket.on('playerList', (data) => {
+      if (data?.length !== user.playerList?.length) {
+        updateStatus.current = true
+        dispatch(setList(data))
+      } else {
+        updateStatus.current = false
+      }
+
       if (data === null) socket.emit('playerList', user.playerList)
     })
+    return () => {
+      socket.removeAllListeners('playerList')
+    }
   }, [user.playerList])
 
   useEffect(() => {
     socket.on('playerName', (name) => dispatch(setList(name)))
     socket.on('roomList', (name) => setRoomList((data) => [...data, name]))
+    return () => {
+      socket.removeAllListeners('playerName')
+    }
   }, [])
 
   return (

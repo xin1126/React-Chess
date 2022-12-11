@@ -15,6 +15,8 @@ const user = createSlice({
       state.playerName = payload
     },
     setList: (state: User, { payload }: { payload: string | Array<string> }) => {
+      if (!payload) return
+
       if (typeof payload === 'string') {
         state.playerList = [...state.playerList, payload]
       } else {
