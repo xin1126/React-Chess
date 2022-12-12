@@ -19,29 +19,31 @@ const Lobby: React.FC = () => {
     navigate(`/room/${name}`)
   }
 
-  const updateStatus = useRef(false)
+  const tempPlayerList = useRef<string[]>([])
   useEffect(() => {
-    if (updateStatus.current) {
-      updateStatus.current = false
-      return
-    }
+    tempPlayerList.current = user.playerList
+  }, [user.playerList])
 
-    const sendTarget = user.playerList.at(-1) === user.playerName
-    if (sendTarget) socket.emit('playerList', user.playerList)
-    socket.on('playerList', (data) => {
-      if (data?.length !== user.playerList?.length) {
-        updateStatus.current = true
-        dispatch(setList(data))
-      } else {
-        updateStatus.current = false
+  useEffect(() => {
+    socket.on('playerList', (data, status) => {
+      // 登入玩家取得玩家列表
+      if (data === null && tempPlayerList.current.at(-1) === user.playerName) {
+        socket.emit('playerList', tempPlayerList.current)
+        return
       }
 
-      if (data === null) socket.emit('playerList', user.playerList)
+      // 是否為 store 更新，必免無限迴圈
+      if (status) return
+
+      // 玩家回登入頁，更新 store
+      if (data?.length !== tempPlayerList.current?.length) {
+        dispatch(setList(data))
+      }
     })
     return () => {
       socket.removeAllListeners('playerList')
     }
-  }, [user.playerList])
+  }, [])
 
   useEffect(() => {
     socket.on('playerName', (name) => dispatch(setList(name)))

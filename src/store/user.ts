@@ -20,8 +20,13 @@ const user = createSlice({
       if (typeof payload === 'string') {
         state.playerList = [...state.playerList, payload]
       } else {
+        const init = payload.includes('init')
+        if (init) payload = payload.filter((item) => item !== 'init')
+        if (state.playerList.length === payload.length) return
         state.playerList = [...payload]
+        if (init) return
       }
+      socket.emit('playerList', state.playerList, true)
     },
     handleLeavePlayer: (state: User, { payload }: { payload: string }) => {
       if (payload !== null) {

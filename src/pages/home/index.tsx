@@ -27,13 +27,19 @@ const Home: React.FC = () => {
 
   useEffect(() => {
     if (!user.playerName) {
+      // 初次進入登入頁取得玩家列表
       socket.emit('playerList')
     } else {
+      // 大廳玩家回登入頁，玩家列表刪除離開玩家
       dispatch(handleLeavePlayer(user.playerName))
     }
 
     socket.on('playerList', (data) => {
-      if (data?.length) dispatch(setList(data))
+      // 玩家在登入頁時，當有其他玩家進入大廳，登入頁重新取得玩家列表
+      if (data !== null) {
+        data.push('init')
+        dispatch(setList(data))
+      }
     })
 
     socket.on('leave', (name) => dispatch(handleLeavePlayer(name)))

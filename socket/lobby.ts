@@ -1,7 +1,7 @@
 const lobby = (io: any) => {
   io.on('connection', (socket: any) => {
-    socket.on('playerList', (list: Array<String>) => {
-      io.emit('playerList', list)
+    socket.on('playerList', (list: Array<String>, status: boolean) => {
+      io.emit('playerList', list, status)
     })
 
     socket.on('join', (name: string) => {
