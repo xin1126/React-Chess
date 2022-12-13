@@ -8,6 +8,10 @@ const lobby = (io: any) => {
       socket.join(name)
       io.emit('roomList', name)
     })
+
+    socket.on('getRoomList', (list: Array<String>) => {
+      io.emit('getRoomList', list)
+    })
   })
 }
 

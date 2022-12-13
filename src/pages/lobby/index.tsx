@@ -24,10 +24,22 @@ const Lobby: React.FC = () => {
     tempPlayerList.current = user.playerList
   }, [user.playerList])
 
+  const tempRoomList = useRef<string[]>([])
   useEffect(() => {
+    tempRoomList.current = roomList
+  }, [roomList])
+
+  const sendTarget = () => tempPlayerList.current.at(-1) === user.playerName
+
+  useEffect(() => {
+    if (!user.playerName) {
+      // 初次進入登入頁取得玩家列表
+      socket.emit('playerList')
+    }
+
     socket.on('playerList', (data, status) => {
       // 登入玩家取得玩家列表
-      if (data === null && tempPlayerList.current.at(-1) === user.playerName) {
+      if (data === null && sendTarget()) {
         socket.emit('playerList', tempPlayerList.current)
         return
       }
@@ -40,15 +52,29 @@ const Lobby: React.FC = () => {
         dispatch(setList(data))
       }
     })
+
+    // 初次進入大廳更新大廳玩家列表
+    socket.on('playerName', (name) => {
+      if (sendTarget()) {
+        socket.emit('getRoomList', tempRoomList.current)
+      }
+      dispatch(setList(name))
+    })
+
+    // 建立房間更新房間列表
+    socket.on('roomList', (name) => {
+      if (tempRoomList.current.includes(name)) return
+      setRoomList((data) => [...data, name])
+    })
+
+    // 初次進入大廳取得房間列表
+    socket.on('getRoomList', (list) => {
+      console.log(list)
+      if (list !== null) setRoomList(list)
+    })
+
     return () => {
       socket.removeAllListeners('playerList')
-    }
-  }, [])
-
-  useEffect(() => {
-    socket.on('playerName', (name) => dispatch(setList(name)))
-    socket.on('roomList', (name) => setRoomList((data) => [...data, name]))
-    return () => {
       socket.removeAllListeners('playerName')
     }
   }, [])
